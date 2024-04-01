@@ -1,7 +1,7 @@
 ; assembly part using x86-64
 
 section .data
-msg db "Hello World", 13, 10, 0
+msg db "%d", 13, 10, 0
 MAX_SIZE equ 30
 
 section .text
@@ -13,49 +13,64 @@ extern printf
 
 ; this section modifies param Z
 ; find Z[i] = A * X[i] + Y[i]
-; @param int n // ecx
-; @param double A // xmm1
-; @param double[] &X // xmm2
-; @param double[] &Y // xmm3
-; @param double[] &Z //
+; @param int n // ecx? 0 this works
+; @param double A // xmm1? 8 this works
+; @param double* &X // xmm2 + ... apparently r8 first element
+; @param double* &Y // xmm3 + ...? this one is r9
+; @param double* &Z // this ??? rbp + 32 siguro
 
 asm_DAXPY:
 	push rbp ; stack frame
 	mov rbp, rsp
 	add rbp, 16 ; push rbp (+8) and return address of call (+8)
-	add rbp, 8
-	mov r15, [rbp] ; this is n
-	; would it be 32 if the the param 3 and 4 are arrays?
-	; lets test that theory
-	; 16 shadow space of two 8-bytes
-	; 8*30*2 because the two parameters before us are arrays with max 30 shadow space
+
+	; This is how to get array elements within the first four params.
+	; X[] should be in rbp+16
+	; LEA r10, [r8+8]
 	
-	mov rsi, qword [rbp+16+8*3*2] ; rsi pointing to @param Z
-	movsd xmm1, qword [rbp+8] ; move A to xmm1
+	; This is how to get array elements past four params.
+	; mov r10, qword [rbp+32]
+	; LEA r11, [r10+8]
+	
 
-	; make a loop that iterates the DAXPY calculation
-	; loop iterator ebx
-	xor r8, r8
-	L1: 
-		; get X and multiply it with A
-		; put X in XMM14, then multiply --- XMM1 never changes because scalar
-		movsd xmm15, qword [rbp+16+r8*8]
-		movsd xmm14, xmm15
-		mulsd xmm14, xmm1 ; this is now A * X[i]
-
-		; get Y and add it to the product earlier
-		; put Y in xmm13
-		movsd xmm13, qword [rbp+16+8*3+r8*8]
-		addsd xmm14, xmm13 ; this is now the result of A * X[i] + Y[i]
+	; ebx is our loop iterator
+	xor ebx, ebx
+	L1:
+		; Calculate for A * X[i]
+		; xmm15 for the product
+		xorpd xmm15, xmm15
 		
-		; this code iterates through Z[]
-		; set Z[i] value here
-		;movsd [rsi], xmm14
+		; get X[ebx] inside [r8 + ebx * 8]
+		LEA r15, [r8 + rbx * 8]
 
-		add rsi, 8
+		; start multiplying
+		; move r15 address to xmmR
+		movsd xmm15, [r15]
+		mulsd xmm15, xmm1
+		xor r15, r15
+		; we dont write the result back to r15
 
-		inc r8
-		cmp r8, 3
+		; calculate for Y[i] + product
+		; get Y[ebx] inside [r9 + ebx * 8]
+		LEA r15, [r9 + rbx * 8]
+
+		; start adding
+		; move r15 to xmm14
+		movsd xmm14, [r15]
+		addsd xmm14, xmm15
+		xor r15, r15
+
+		; store xmm14 into Z[i]
+		mov r15, qword [rbp + 32]
+		LEA r14, [r15 + rbx * 8]
+		movsd [r14], xmm14 ; this is Z[i]
+
+
+		inc ebx
+		cmp ebx, ecx
 		jl L1
+
+	DONE:
+
 	pop rbp
 	ret
