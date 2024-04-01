@@ -20,27 +20,23 @@ int main() {
     clock_t start, end;
     double cpu_time_used;
 
-    // Vector length
-    printf("Enter the length of the vector (up to %d): ", MAX_SIZE);
-    scanf_s("%d", &n);
-
-    // Input scalar variable A
-    printf("Enter the scalar variable A: ");
-    scanf_s("%lf", &A);
-
-    // Vector X
-    printf("Enter the elements of vector X:\n");
-    for (int i = 0; i < n; i++) {
-        printf("X[%d]: ", i);
-        scanf_s("%lf", &X[i]);
+    FILE* file = fopen("input.txt", "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        return 1;
     }
 
-    // Vector Y
-    printf("Enter the elements of vector Y:\n");
+    // Read input from file
+    fscanf(file, "%d", &n);
+    fscanf(file, "%lf", &A);
     for (int i = 0; i < n; i++) {
-        printf("Y[%d]: ", i);
-        scanf_s("%lf", &Y[i]);
+        fscanf(file, "%lf", &X[i]);
     }
+    for (int i = 0; i < n; i++) {
+        fscanf(file, "%lf", &Y[i]);
+    }
+
+    fclose(file);
 
     // Measure time for C function
     start = clock();
