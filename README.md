@@ -1,4 +1,4 @@
-# LBYARCH-MP2
+![image](https://github.com/nemurinoU/LBYARCH-MP2/assets/63938840/c5fb9818-ecd0-420d-bae2-4b824dbd705f)# LBYARCH-MP2
 ## x86-to-C interface programming project
 The program runs two versions of the DAXPY function: one implemented in C and the other implemented in NASM (x86_64 assembly language). The DAXPY function computes the result of A * X + Y where A is a scalar and X and Y are vectors. The program also outputs the average runtime for each kernel, providing insights into the performance of the C and NASM implementations of the DAXPY function.
 
@@ -16,14 +16,14 @@ Below are tables for the average runtimes of the two kernels and the correspondi
 | ------------- | ------------- | ----------- | 
 | **2<sup>20</sup>**  | 2.788 ms  |  1.060 ms |
 | **2<sup>24</sup>**  | 63.631 ms |  23.169 ms |
-| **2<sup>28</sup>**  |   |           |
+| **2<sup>28</sup>**  | 2637.284 ms | 1379.334 ms |
 
 ### Average Execution Time in Release Mode
 | Vector Length  | C Kernel |  x86_64 Kernel
 | ------------- | ------------- | ----------- | 
 | **2<sup>20</sup>**  | 1.185 ms  |  1.051 ms |
 | **2<sup>24</sup>**  | 21.100 ms |  22.388 ms |
-| **2<sup>28</sup>** | 2637.284 ms  | 1379.334 ms |
+| **2<sup>28</sup>** | 651.106 ms | 523.642 ms |
 
 ## Analysis
 
