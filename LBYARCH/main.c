@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <direct.h>
 
-#define MAX_SIZE 30 // TODO:  change according to specs
 
 // Function prototype for NASM function
 extern void asm_DAXPY(int n, double A, double* X, double* Y, double* Z);
