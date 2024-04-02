@@ -58,10 +58,11 @@ int main(int argc, char* argv[]) {
     fname = (char*)malloc(10 * sizeof(char));
     suffix = (char*)malloc(20 * sizeof(char));
 
-    clock_t start, end;
-    double cpu_time_used;
-    double c_cpu_ave = 0;
-    double asm_cpu_ave = 0;
+    LARGE_INTEGER frequency;
+    LARGE_INTEGER start, end;
+    long double cpu_time_used;
+    long double c_cpu_ave = 0;
+    long double asm_cpu_ave = 0;
     
 
     // ask for file input
@@ -110,17 +111,17 @@ int main(int argc, char* argv[]) {
         printf("... and %d more members...\n", n - 10);
     }
 
-    start = 0;
-    end = 0;
+    QueryPerformanceFrequency(&frequency);
 
     // Measure time for C function
     for (int t = 0; t < T; ++t) {
-        start = clock();
+        QueryPerformanceCounter(&start);
         c_DAXPY(n, A, X, Y, ZC);
-        end = clock();
-        cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+        QueryPerformanceCounter(&end);
+        cpu_time_used = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
         c_cpu_ave += cpu_time_used;
     }
+
 
     // Print the results of the C function
     printf("\n=====[DAXPY USING C KERNEL]=====\n");
@@ -131,43 +132,35 @@ int main(int argc, char* argv[]) {
         displayMembers(10, 'Z', ZC);
         printf("... and %d more members...\n", n - 10);
     }
-    /*
-    snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s", fname);
-    if (_mkdir(suffix, 0777) == -1) {
-        perror("Could not make new directory");
-    }
     
-    snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s/C-OUT_%s", fname, fname);
-    FILE* file2 = fopen(suffix, "w");
-    if (file2 == NULL) {
-        perror("Could not open-write file");
-        return -1;
-    }
-
-    printf("\n[INFO] Output saved to /__tests__/outputs/%s/C-OUT_%s\n\n", fname, fname);
-    // save to output bin
-    for (int i = 0; i < n - 1; ++i) fprintf(file2, "%.1f ", ZC[i]);
-    fprintf(file2, "%.1f\n", ZC[n - 1]);
-
-    fclose(file2);*/
-    
-
-    // Clear the contents of Z
-    //for (int i = 0; i < n; ++i) Z[i] = 0;
 
     // Measure time for NASM function
 
-    start = 0;
-    end = 0;
-
+    QueryPerformanceFrequency(&frequency);
+ 
     for (int t = 0; t < T; ++t) {
-        start = clock();
+        QueryPerformanceCounter(&start);
         asm_DAXPY(n, A, X, Y, ZASM);
-        end = clock();
-        cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+        QueryPerformanceCounter(&end);
+        cpu_time_used = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
+
+
+        // Print the contents of start and end
+        //printf("Start: %llu\n", start.QuadPart);
+        //printf("End: %llu\n", end.QuadPart);
+
+        // Print the elapsed time
+        printf("Elapsed time: %lf \n", cpu_time_used);
+
         asm_cpu_ave += cpu_time_used;
+
     }
-   
+    printf("Total Time: %lf \n", asm_cpu_ave);
+    //asm_cpu_ave = asm_cpu_ave / 30;
+    //printf("Ave Time: %lf \n", asm_cpu_ave);
+
+
+    
     
     // Print the results of the asm function
     printf("\n=====[DAXPY USING ASM KERNEL]=====\n");
