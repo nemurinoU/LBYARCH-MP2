@@ -180,7 +180,7 @@ int main(int argc, char* argv[]) {
     printf("[INFO] C version is sanity check answer key.\n");
     printf("[INFO] %d out of %d match. ", chk, n);
 
-    if (chk == n) printf("x85_64 is consistent and correct with C.\n");
+    if (chk == n) printf("x86_64 is consistent and correct with C.\n\n\n\n");
 
     fclose(file3);
     return 0;
