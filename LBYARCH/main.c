@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <direct.h>
 
-#define MAX_SIZE 30 // TODO:  change according to specs
 
 // Function prototype for NASM function
 extern void asm_DAXPY(int n, double A, double* X, double* Y, double* Z);
@@ -50,7 +49,7 @@ int main(int argc, char* argv[]) {
 
     int n, chk;
     double A;
-    double *X, *Y, *ZC, *ZASM;
+    double* X, * Y, * ZC, * ZASM;
     char* fname;
     char* suffix;
     char* folder;
@@ -63,7 +62,7 @@ int main(int argc, char* argv[]) {
     long double cpu_time_used;
     long double c_cpu_ave = 0;
     long double asm_cpu_ave = 0;
-    
+
 
     // ask for file input
     dir();
@@ -121,6 +120,7 @@ int main(int argc, char* argv[]) {
         cpu_time_used = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
         printf("Elapsed time: %lf \n", cpu_time_used);
 
+
         c_cpu_ave += cpu_time_used;
     }
 
@@ -128,18 +128,18 @@ int main(int argc, char* argv[]) {
     // Print the results of the C function
     printf("\n=====[DAXPY USING C KERNEL]=====\n");
     //printf("Time taken (C): %f seconds\n", cpu_time_used);
-    
+
     if (n <= 10) displayMembers(n, 'Z', ZC);
     else {
         displayMembers(10, 'Z', ZC);
         printf("... and %d more members...\n", n - 10);
     }
-    
+
 
     // Measure time for NASM function
 
     QueryPerformanceFrequency(&frequency);
- 
+
     for (int t = 0; t < T; ++t) {
         QueryPerformanceCounter(&start);
         asm_DAXPY(n, A, X, Y, ZASM);
@@ -162,8 +162,8 @@ int main(int argc, char* argv[]) {
     //printf("Ave Time: %lf \n", asm_cpu_ave);
 
 
-    
-    
+
+
     // Print the results of the asm function
     printf("\n=====[DAXPY USING ASM KERNEL]=====\n");
     //printf("Time taken (NASM): %f seconds\n", cpu_time_used);
@@ -171,12 +171,12 @@ int main(int argc, char* argv[]) {
     else {
         displayMembers(10, 'Z', ZASM);
         printf("... and %d more members...\n", n - 10);
-    }    
+    }
 
     // Correctness check
     chk = 0;
     for (int i = 0; i < n; ++i) {
-        if (*(ZC+i) == *(ZASM+i)) ++chk;
+        if (*(ZC + i) == *(ZASM + i)) ++chk;
     }
     printf("\n=====[!SANITY CHECK!]=====\n");
     printf("[INFO] C version is sanity check answer key.\n");
@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
     if (chk == n) printf("x86_64 is consistent and correct with C.\n\n\n\n");
     //printf("Average Time (C) / 30 runs: %lf s\n", c_cpu_ave / 30);
     //printf("Average Time (NASM) / 30 runs: %lf s\n", asm_cpu_ave / 30);
-    
+
     // free memory
     free(X);
     free(Y);
@@ -195,4 +195,4 @@ int main(int argc, char* argv[]) {
     free(suffix);
 
     return 0;
-}
+}   
