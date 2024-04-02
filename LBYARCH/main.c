@@ -46,6 +46,8 @@ void displayMembers(int n, char c, double* arr) {
 }
 
 int main(int argc, char* argv[]) {
+    int T = 30;
+
     int n, chk;
     double A;
     double *X, *Y, *ZC, *ZASM;
@@ -58,6 +60,8 @@ int main(int argc, char* argv[]) {
 
     clock_t start, end;
     double cpu_time_used;
+    double c_cpu_ave = 0;
+    double asm_cpu_ave = 0;
     
 
     // ask for file input
@@ -102,11 +106,13 @@ int main(int argc, char* argv[]) {
     }
 
     // Measure time for C function
-    start = clock();
-    c_DAXPY(n, A, X, Y, ZC);
-    end = clock();
-    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
-    
+    for (int t = 0; t < T; ++t) {
+        start = clock();
+        c_DAXPY(n, A, X, Y, ZC);
+        end = clock();
+        cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+        c_cpu_ave += cpu_time_used;
+    }
 
     // Print the results of the C function
     printf("\n=====[DAXPY USING C KERNEL]=====\n");
@@ -124,7 +130,7 @@ int main(int argc, char* argv[]) {
     }
     
     snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s/C-OUT_%s", fname, fname);
-    FILE* file2 = fopen(suffix, "w");
+    /*FILE* file2 = fopen(suffix, "w");
     if (file2 == NULL) {
         perror("Could not open-write file");
         return -1;
@@ -135,7 +141,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < n - 1; ++i) fprintf(file2, "%.1f ", ZC[i]);
     fprintf(file2, "%.1f\n", ZC[n - 1]);
 
-    fclose(file2);
+    fclose(file2);*/
     
 
     // Clear the contents of Z
@@ -143,9 +149,12 @@ int main(int argc, char* argv[]) {
 
     // Measure time for NASM function
     start = clock();
-    asm_DAXPY(n, A, X, Y, ZASM);
-    end = clock();
-    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    for (int t = 0; t < T; ++t) {
+        asm_DAXPY(n, A, X, Y, ZASM);
+        end = clock();
+        cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+        asm_cpu_ave += cpu_time_used;
+    }
    
     
     // Print the results of the asm function
@@ -158,7 +167,7 @@ int main(int argc, char* argv[]) {
     }
     
 
-    snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s/NASM-OUT_%s", fname, fname);
+    /*snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s/NASM-OUT_%s", fname, fname);
     FILE* file3 = fopen(suffix, "w");
     if (file3 == NULL) {
         perror("Could not open-write file");
@@ -170,6 +179,9 @@ int main(int argc, char* argv[]) {
     fprintf(file3, "Z --> ");
     for (int i = 0; i < n - 1; ++i) fprintf(file3, "%.1f ", ZASM[i]);
     fprintf(file3, "%.1f\n", ZASM[n - 1]);
+    
+    fclose(file3);
+    */
 
     // Correctness check
     chk = 0;
@@ -181,7 +193,8 @@ int main(int argc, char* argv[]) {
     printf("[INFO] %d out of %d match. ", chk, n);
 
     if (chk == n) printf("x86_64 is consistent and correct with C.\n\n\n\n");
+    printf("Average Time (C) / 30 runs: %lf\n", c_cpu_ave / 30);
+    printf("Average Time (NASM) / 30 runs: %lf\n", asm_cpu_ave / 30);
 
-    fclose(file3);
     return 0;
 }

@@ -26,10 +26,9 @@ dir /A:-D /B
 echo.
 echo.
 
-cd../
+cd ../
 
 set /p TEST_NAME=Enter filename:
-
 
 rem
 cd /d "%~dp0"

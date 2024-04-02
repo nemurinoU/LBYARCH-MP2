@@ -13,7 +13,7 @@ counter = int(last_filename .split('.')[0][-1]) + 1
 
 # random.randint(1, 2**30)
 with open(f"input{counter}.txt", "w") as f:
-    len = int(10e7)
+    len = int(2**28)
     f.write(f"{len}\n") # vector length
     f.write(f"{2.0}\n") # scalar variable
     
