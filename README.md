@@ -34,7 +34,7 @@ When running the program in debug mode, it is apparent that the NASM kernel is f
 ## Runtime per iteration
 Below is a breakdown of the runtime for each of the 30 iterations that were performed for each category. The size of each vector is indicated for each test performed.
 
-## (DEBUG MODE)
+## DEBUG MODE
 ### 2<sup>20</sup> for C (left) and NASM (right)
 <div>
 <img src="./screenshots/2e20debug-c.png" width="150" height="400">
@@ -55,7 +55,7 @@ Below is a breakdown of the runtime for each of the 30 iterations that were perf
 <img src="./screenshots/debug2r28_part2.png" width="500" height="500">
 </div>
 
-## (RELEASE MODE)
+## RELEASE MODE
 ### 2<sup>20</sup> for C (left) and NASM (right)
 <div>
 <img src="./screenshots/2e20release-c.png" width="150" height="400">
