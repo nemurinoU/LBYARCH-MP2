@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
         c_DAXPY(n, A, X, Y, ZC);
         QueryPerformanceCounter(&end);
         cpu_time_used = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
-        printf("[#%d] Elapsed time: %lf \n", t+1, cpu_time_used);
+        printf("Elapsed time: %lf \n", cpu_time_used);
 
         c_cpu_ave += cpu_time_used;
     }
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
         //printf("End: %llu\n", end.QuadPart);
 
         // Print the elapsed time
-        printf("[#%d] Elapsed time: %lf \n", t+1, cpu_time_used);
+        printf("Elapsed time: %lf \n", cpu_time_used);
 
         asm_cpu_ave += cpu_time_used;
 
