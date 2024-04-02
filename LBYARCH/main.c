@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
         c_DAXPY(n, A, X, Y, ZC);
         QueryPerformanceCounter(&end);
         cpu_time_used = (double)(end.QuadPart - start.QuadPart) / frequency.QuadPart;
-        printf("Elapsed time: %lf \n", cpu_time_used);
+        printf("[#%d] Elapsed time: %lf \n", t+1, cpu_time_used);
 
         c_cpu_ave += cpu_time_used;
     }
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 
     // Print the results of the C function
     printf("\n=====[DAXPY USING C KERNEL]=====\n");
-    printf("Time taken (C): %f seconds\n", cpu_time_used);
+    //printf("Time taken (C): %f seconds\n", cpu_time_used);
     
     if (n <= 10) displayMembers(n, 'Z', ZC);
     else {
@@ -152,12 +152,12 @@ int main(int argc, char* argv[]) {
         //printf("End: %llu\n", end.QuadPart);
 
         // Print the elapsed time
-        printf("Elapsed time: %lf \n", cpu_time_used);
+        printf("[#%d] Elapsed time: %lf \n", t+1, cpu_time_used);
 
         asm_cpu_ave += cpu_time_used;
 
     }
-    printf("Total Time: %lf \n", asm_cpu_ave);
+    //printf("Total Time: %lf \n", asm_cpu_ave);
     //asm_cpu_ave = asm_cpu_ave / 30;
     //printf("Ave Time: %lf \n", asm_cpu_ave);
 
@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
     
     // Print the results of the asm function
     printf("\n=====[DAXPY USING ASM KERNEL]=====\n");
-    printf("Time taken (NASM): %f seconds\n", cpu_time_used);
+    //printf("Time taken (NASM): %f seconds\n", cpu_time_used);
     if (n <= 10) displayMembers(n, 'Z', ZASM);
     else {
         displayMembers(10, 'Z', ZASM);
@@ -183,8 +183,8 @@ int main(int argc, char* argv[]) {
     printf("[INFO] %d out of %d match. ", chk, n);
 
     if (chk == n) printf("x86_64 is consistent and correct with C.\n\n\n\n");
-    printf("Average Time (C) / 30 runs: %lf s\n", c_cpu_ave / 30);
-    printf("Average Time (NASM) / 30 runs: %lf s\n", asm_cpu_ave / 30);
+    //printf("Average Time (C) / 30 runs: %lf s\n", c_cpu_ave / 30);
+    //printf("Average Time (NASM) / 30 runs: %lf s\n", asm_cpu_ave / 30);
     
     // free memory
     free(X);

@@ -1,3 +1,4 @@
 ﻿  main.c
+C:\Users\icesw\Documents\GitHub\LBYARCH-MP2\LBYARCH\main.c(71,5): warning C4013: 'gets' undefined; assuming extern returning int
 C:\Users\icesw\Documents\GitHub\LBYARCH-MP2\LBYARCH\main.c(56,11): warning C4101: 'folder': unreferenced local variable
   LBYARCH.vcxproj -> C:\Users\icesw\Documents\GitHub\LBYARCH-MP2\x64\Debug\MP2_Interface_Programming.exe
