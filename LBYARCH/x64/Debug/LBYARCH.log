@@ -1,3 +1,4 @@
 ﻿  Performing Custom Build Tools
   main.c
+C:\Users\icesw\Documents\GitHub\LBYARCH-MP2\LBYARCH\main.c(62,5): warning C4013: 'gets' undefined; assuming extern returning int
   LBYARCH.vcxproj -> C:\Users\icesw\Documents\GitHub\LBYARCH-MP2\x64\Debug\MP2_Interface_Programming.exe

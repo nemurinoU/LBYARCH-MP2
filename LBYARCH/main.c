@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "dirent.h"
 
 #define MAX_SIZE 30 // TODO:  change according to specs
 
@@ -14,6 +15,26 @@ void c_DAXPY(int n, double A, double X[], double Y[], double Z[]) {
     }
 }
 
+// helper function to get files
+int dir() {
+    DIR* dp;
+    struct dirent* ep;
+    dp = opendir("../__tests__");
+    if (dp != NULL) {
+        printf("=====[AVAILABLE TESTS]=====\n");
+        while ((ep = readdir(dp)) != NULL) {
+            if (strstr((ep->d_name), ".txt")) printf("%s\n", (ep->d_name));
+        }
+
+        (void)closedir(dp);
+
+        return 0;
+    }
+
+    perror("Couldn't open the directory");
+    return -1;
+}
+
 // helper function for information
 void displayMembers(int n, char c, double* arr) {
     printf("%c --> ", c);
@@ -25,21 +46,43 @@ int main(int argc, char* argv[]) {
     int n;
     double A;
     double *X, *Y, *Z;
+    char* fname;
+    char* suffix;
+
+    fname = (char*)malloc(50 * sizeof(char));
+    suffix = (char*)malloc(50 * sizeof(char));
 
     clock_t start, end;
     double cpu_time_used;
+    
 
-    scanf_s("%d", &n);
-    scanf_s("%lf", &A);
+    // ask for file input
+    dir();
+    printf("\nEnter filename: ");
+    gets(fname);
+
+    snprintf(suffix, 50 * sizeof(char), "../__tests__/%s", fname);
+    FILE* file = fopen(suffix, "r");
+    if (file == NULL) {
+        perror("Could not open file");
+        return -1;
+    }
+
+    fscanf_s(file, "%d", &n);
+    fscanf_s(file, "%lf", &A);
+
+    //scanf_s("%d", &n);
+    //scanf_s("%lf", &A);
 
     X = (double*)malloc(n * sizeof(double));
-    Y = (double*)malloc(n * sizeof(double));    
+    Y = (double*)malloc(n * sizeof(double));
     Z = (double*)malloc(n * sizeof(double));
 
     // get x and y
-    for (int i = 0; i < n; ++i) scanf_s("%lf", &X[i]);
-    for (int i = 0; i < n; ++i) scanf_s("%lf", &Y[i]);
+    for (int i = 0; i < n; ++i) fscanf_s(file, "%lf", &X[i]); //scanf_s("%lf", &X[i]);
+    for (int i = 0; i < n; ++i) fscanf_s(file, "%lf", &Y[i]); //scanf_s("%lf", &Y[i]);
 
+    fclose(file);
     displayMembers(n, 'X', X);
     displayMembers(n, 'Y', Y);
 

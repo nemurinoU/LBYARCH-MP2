@@ -1,2 +1,2 @@
-"x64/Debug/LBYARCH" < "__tests__/default_input.txt"
+"x64/Debug/LBYARCH"
 cmd /k
