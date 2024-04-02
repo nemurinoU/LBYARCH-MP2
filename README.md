@@ -25,5 +25,6 @@ Program runs two kernels (C and NASM) and is to perform DAXPY (A*X + Y) function
 #### 2^24
 
 #### 2^28
+![debug_28_1](./screnshots/debug2r28_part1.png?raw=true)
+![debug_28_2](./screnshots/debug2r28_part2.png?raw=true)
 
-![2](./testcases/csarch2asinput(BIN).png?raw=true)
