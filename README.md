@@ -29,8 +29,6 @@ Below are tables for the average runtimes of the two kernels and the correspondi
 
 When running the program in debug mode, it is apparent that the NASM kernel is far faster than the C program, and the runtime exponentially increases the bigger the vector size becomes. However, when running it in release mode, the difference becomes smaller, and in certain cases C outperforms the NASM kernel as well. This suggests that the optimization that occurs when the program is released in release mode significantly improves the performance of the programs, particularly the C kernel's. For instance, the C kernel's performance improves by 202% for the vector length of 2<sup>24</sup> when it's executed in release mode. This underscores the importance of optimization techniques as well as compiler settings.
 
-[Insert analysis here]
-
 ## Runtime per iteration
 Below is a breakdown of the runtime for each of the 30 iterations that were performed for each category. The size of each vector is indicated for each test performed.
 
