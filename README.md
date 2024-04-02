@@ -19,12 +19,22 @@ Program runs two kernels (C and NASM) and is to perform DAXPY (A*X + Y) function
 #### Total
 
 [Insert analysis here]
-### Output with Correctness Check
-#### 2^20
+## Output with Correctness Check
+## (DEBUG MODE)
+### 2^20
 
-#### 2^24
+### 2^24
 
-#### 2^28
+### 2^28
 ![debug_28_1](./screenshots/debug2r28_part1.png?raw=true)
 ![debug_28_2](./screenshots/debug2r28_part2.png?raw=true)
+
+## (RELEASE MODE)
+### 2^20
+
+### 2^24
+
+### 2^28
+![release_28_1](./screenshots/release2r28_part1.png?raw=true)
+![release_28_2](./screenshots/release2r28_part2.png?raw=true)
 
