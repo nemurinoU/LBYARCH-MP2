@@ -55,8 +55,8 @@ int main(int argc, char* argv[]) {
     char* suffix;
     char* folder;
 
-    fname = (char*)malloc(100 * sizeof(char));
-    suffix = (char*)malloc(100 * sizeof(char));
+    fname = (char*)malloc(10 * sizeof(char));
+    suffix = (char*)malloc(20 * sizeof(char));
 
     clock_t start, end;
     double cpu_time_used;
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
     printf("\nEnter filename: ");
     gets(fname);
 
-    snprintf(suffix, 100 * sizeof(char), "../__tests__/%s", fname);
+    snprintf(suffix, 70 * sizeof(char), "../__tests__/%s", fname);
     FILE* file = fopen(suffix, "r");
     if (file == NULL) {
         perror("Could not open file");
@@ -86,6 +86,11 @@ int main(int argc, char* argv[]) {
     Y = (double*)malloc(n * sizeof(double));
     ZC = (double*)malloc(n * sizeof(double));
     ZASM = (double*)malloc(n * sizeof(double));
+
+    if (X == NULL || Y == NULL || ZC == NULL || ZASM == NULL) {
+        printf("Failed to allocate enough memory...\n");
+        return -1;
+    }
 
     // get x and y
     for (int i = 0; i < n; ++i) fscanf_s(file, "%lf", &X[i]); //scanf_s("%lf", &X[i]);
@@ -105,6 +110,9 @@ int main(int argc, char* argv[]) {
         printf("... and %d more members...\n", n - 10);
     }
 
+    start = 0;
+    end = 0;
+
     // Measure time for C function
     for (int t = 0; t < T; ++t) {
         start = clock();
@@ -123,14 +131,14 @@ int main(int argc, char* argv[]) {
         displayMembers(10, 'Z', ZC);
         printf("... and %d more members...\n", n - 10);
     }
-
+    /*
     snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s", fname);
     if (_mkdir(suffix, 0777) == -1) {
         perror("Could not make new directory");
     }
     
     snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s/C-OUT_%s", fname, fname);
-    /*FILE* file2 = fopen(suffix, "w");
+    FILE* file2 = fopen(suffix, "w");
     if (file2 == NULL) {
         perror("Could not open-write file");
         return -1;
@@ -148,8 +156,12 @@ int main(int argc, char* argv[]) {
     //for (int i = 0; i < n; ++i) Z[i] = 0;
 
     // Measure time for NASM function
-    start = clock();
+
+    start = 0;
+    end = 0;
+
     for (int t = 0; t < T; ++t) {
+        start = clock();
         asm_DAXPY(n, A, X, Y, ZASM);
         end = clock();
         cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
@@ -164,37 +176,28 @@ int main(int argc, char* argv[]) {
     else {
         displayMembers(10, 'Z', ZASM);
         printf("... and %d more members...\n", n - 10);
-    }
-    
-
-    /*snprintf(suffix, 100 * sizeof(char), "../__tests__/outputs/%s/NASM-OUT_%s", fname, fname);
-    FILE* file3 = fopen(suffix, "w");
-    if (file3 == NULL) {
-        perror("Could not open-write file");
-        return -1;
-    }
-
-    printf("\n[INFO] Output saved to /__tests__/outputs/%s/NASM-OUT_%s\n\n", fname, fname);
-    // save to output bin
-    fprintf(file3, "Z --> ");
-    for (int i = 0; i < n - 1; ++i) fprintf(file3, "%.1f ", ZASM[i]);
-    fprintf(file3, "%.1f\n", ZASM[n - 1]);
-    
-    fclose(file3);
-    */
+    }    
 
     // Correctness check
     chk = 0;
     for (int i = 0; i < n; ++i) {
-        if (ZC[i] == ZASM[i]) ++chk;
+        if (*(ZC+i) == *(ZASM+i)) ++chk;
     }
     printf("\n=====[!SANITY CHECK!]=====\n");
     printf("[INFO] C version is sanity check answer key.\n");
     printf("[INFO] %d out of %d match. ", chk, n);
 
     if (chk == n) printf("x86_64 is consistent and correct with C.\n\n\n\n");
-    printf("Average Time (C) / 30 runs: %lf\n", c_cpu_ave / 30);
-    printf("Average Time (NASM) / 30 runs: %lf\n", asm_cpu_ave / 30);
+    printf("Average Time (C) / 30 runs: %lf s\n", c_cpu_ave / 30);
+    printf("Average Time (NASM) / 30 runs: %lf s\n", asm_cpu_ave / 30);
+    
+    // free memory
+    free(X);
+    free(Y);
+    free(ZC);
+    free(ZASM);
+    free(fname);
+    free(suffix);
 
     return 0;
 }
